@@ -18,6 +18,7 @@ class BaseClient:
         self._base_url = config.api.host.rstrip("/")
 
     def create_headers(self, access_token: str) -> dict[str, str]:
+        """Construye los encabezados estándar para la API."""
         return {
             "Authorization": f"Bearer {access_token}",
             "Content-Type": "application/json",
@@ -51,5 +52,15 @@ class BaseClient:
         )
 
         response.raise_for_status()
+
+        # print("=" * 80)
+        # print("URL:", response.request.url)
+        # print("METHOD:", response.request.method)
+        # print("HEADERS:", response.request.headers)
+        # print("BODY:", response.request.body)
+        # print("-" * 80)
+        # print("STATUS:", response.status_code)
+        # print("RESPONSE:", response.text)
+        # print("=" * 80)
 
         return response

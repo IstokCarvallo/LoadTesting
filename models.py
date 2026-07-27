@@ -60,3 +60,10 @@ class LoginResponse:
     username: str
     roles: list[str]
     token: TokenInfo
+
+@dataclass(frozen=True)
+class ConsultaRequest:
+    """Solicitud de consulta de movimientos."""
+
+    cliente_id: int
+    fecha_proceso: str
