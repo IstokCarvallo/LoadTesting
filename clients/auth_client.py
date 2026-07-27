@@ -4,18 +4,20 @@ Cliente de autenticación.
 
 from datetime import datetime
 from config import config
-from models import LoginResponse, TokenInfo
+from models import ApiResponse, LoginResponse, TokenInfo
 from .base_client import BaseClient
 
 
 class AuthClient(BaseClient):
+    """Cliente para autenticación contra la API."""
+
     def login(
         self,
         username: str,
         password: str,
     ) -> LoginResponse:
 
-        response = self.post(
+        response: ApiResponse = self.post(
             config.authentication.login,
             {
                 "username": username,
@@ -23,7 +25,13 @@ class AuthClient(BaseClient):
             },
         )
 
-        data = response.json()["data"]
+        if not response.success:
+            raise RuntimeError(
+                response.error
+                or f"Error de autenticación ({response.status_code})"
+            )
+
+        data = response.body["data"]
 
         return LoginResponse(
             user_id=data["userId"],
@@ -38,15 +46,25 @@ class AuthClient(BaseClient):
             ),
         )
 
-    def refresh(self, refresh_token: str,) -> TokenInfo:
-        response = self.post(
+    def refresh(
+        self,
+        refresh_token: str,
+    ) -> TokenInfo:
+
+        response: ApiResponse = self.post(
             config.authentication.refresh,
             {
                 "refreshToken": refresh_token,
             },
         )
 
-        data = response.json()["data"]
+        if not response.success:
+            raise RuntimeError(
+                response.error
+                or f"Error al refrescar token ({response.status_code})"
+            )
+
+        data = response.body["data"]
 
         return TokenInfo(
             access_token=data["accessToken"],

@@ -2,7 +2,8 @@
 Modelos de configuración de la aplicación.
 """
 from datetime import datetime
-from dataclasses import dataclass
+from dataclasses import dataclass,  field
+from typing import Any
 
 
 @dataclass(frozen=True)
@@ -67,3 +68,19 @@ class ConsultaRequest:
 
     cliente_id: int
     fecha_proceso: str
+
+@dataclass(frozen=True)
+class Usuario:
+    """Solicitud de usuarios para API."""
+    username: str
+    password: str
+
+@dataclass(frozen=True)
+class ApiResponse:
+    """Respuesta estándar de cualquier llamada a la API."""
+
+    success: bool
+    status_code: int
+    elapsed_ms: float
+    body: dict[str, Any] = field(default_factory=dict)
+    error: str | None = None

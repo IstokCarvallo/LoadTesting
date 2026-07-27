@@ -9,15 +9,21 @@ from models import LoginResponse, TokenInfo
 
 
 class AuthManager:
+    """Administra el ciclo de vida del Access Token."""
+
     def __init__(self) -> None:
         self._client = AuthClient()
         self._login: LoginResponse | None = None
         self._token: TokenInfo | None = None
 
-    def login(self, username: str, password: str,) -> None:
+    def login(
+        self,
+        username: str,
+        password: str,) -> None:
+
         self._login = self._client.login(
-            username,
-            password,
+            username=username,
+            password=password,
         )
 
         self._token = self._login.token
@@ -46,3 +52,17 @@ class AuthManager:
             return []
 
         return self._login.roles
+
+    @property
+    def user_id(self) -> int:
+        if self._login is None:
+            return 0
+
+        return self._login.user_id
+
+    @property
+    def token_expiration(self):
+        if self._token is None:
+            return None
+
+        return self._token.expiration

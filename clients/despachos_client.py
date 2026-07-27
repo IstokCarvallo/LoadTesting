@@ -2,19 +2,18 @@
 Cliente de Despachos.
 """
 
-from models import ConsultaRequest
+from models import ApiResponse, ConsultaRequest
 from config import config
 from .base_client import BaseClient
 
 
 class DespachosClient(BaseClient):
-    def consultar(
-        self,
-        access_token: str,
-        consulta: ConsultaRequest,
-    ) -> dict:
+    """Cliente para consultar el endpoint de Despachos."""
 
-        response = self.post(
+    def consultar(self, access_token: str,
+        consulta: ConsultaRequest,) -> ApiResponse:
+
+        return self.post(
             endpoint=config.endpoints.despachos,
             json={
                 "clienteId": consulta.cliente_id,
@@ -22,5 +21,3 @@ class DespachosClient(BaseClient):
             },
             headers=self.create_headers(access_token),
         )
-
-        return response.json()

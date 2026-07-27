@@ -6,6 +6,7 @@ from __future__ import annotations
 from typing import Any
 import requests
 from config import config
+from models import ApiResponse
 
 
 class BaseClient:
@@ -27,40 +28,72 @@ class BaseClient:
 
     def post(self, endpoint: str,
         json: dict[str, Any],
-        headers: dict[str, str] | None = None,
-    ) -> requests.Response:
+        headers: dict[str, str] | None = None,) -> ApiResponse:
 
-        response = self._session.post(
-            f"{self._base_url}{endpoint}",
-            json=json,
-            headers=headers,
-            timeout=self.DEFAULT_TIMEOUT,
-        )
+        try:
+            response = self._session.post(
+                f"{self._base_url}{endpoint}",
+                json=json,
+                headers=headers,
+                timeout=self.DEFAULT_TIMEOUT,
+            )
 
-        response.raise_for_status()
+            body: dict[str, Any] = {}
 
-        return response
+            if response.content:
+                try:
+                    body = response.json()
+                except ValueError:
+                    body = {"raw": response.text}
+
+            return ApiResponse(
+                success=response.ok,
+                status_code=response.status_code,
+                elapsed_ms=response.elapsed.total_seconds() * 1000,
+                body=body,
+                error=None if response.ok else body.get("message"),
+            )
+
+        except requests.RequestException as ex:
+            return ApiResponse(
+                success=False,
+                status_code=0,
+                elapsed_ms=0,
+                body={},
+                error=str(ex),
+            )
 
     def get(self, endpoint: str,
-        headers: dict[str, str] | None = None,
-    ) -> requests.Response:
+        headers: dict[str, str] | None = None,) -> ApiResponse:
 
-        response = self._session.get(
-            f"{self._base_url}{endpoint}",
-            headers=headers,
-            timeout=self.DEFAULT_TIMEOUT,
-        )
+        try:
+            response = self._session.get(
+                f"{self._base_url}{endpoint}",
+                headers=headers,
+                timeout=self.DEFAULT_TIMEOUT,
+            )
 
-        response.raise_for_status()
+            body: dict[str, Any] = {}
 
-        # print("=" * 80)
-        # print("URL:", response.request.url)
-        # print("METHOD:", response.request.method)
-        # print("HEADERS:", response.request.headers)
-        # print("BODY:", response.request.body)
-        # print("-" * 80)
-        # print("STATUS:", response.status_code)
-        # print("RESPONSE:", response.text)
-        # print("=" * 80)
+            if response.content:
+                try:
+                    body = response.json()
+                except ValueError:
+                    body = {"raw": response.text}
 
-        return response
+            return ApiResponse(
+                success=response.ok,
+                status_code=response.status_code,
+                elapsed_ms=response.elapsed.total_seconds() * 1000,
+                body=body,
+                error=None if response.ok else body.get("message"),
+            )
+
+        except requests.RequestException as ex:
+            return ApiResponse(
+                success=False,
+                status_code=0,
+                elapsed_ms=0,
+                body={},
+                error=str(ex),
+            )
