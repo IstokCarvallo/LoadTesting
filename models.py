@@ -1,7 +1,7 @@
 """
 Modelos de configuración de la aplicación.
 """
-
+from datetime import datetime
 from dataclasses import dataclass
 
 
@@ -42,3 +42,21 @@ class AppConfig:
     endpoints: EndpointConfig
     datasets: DatasetConfig
     logging: LoggingConfig
+
+@dataclass
+class TokenInfo:
+    """Información de autenticación."""
+
+    access_token: str
+    refresh_token: str
+    expiration: datetime
+
+
+@dataclass
+class LoginResponse:
+    """Respuesta de autenticación."""
+
+    user_id: int
+    username: str
+    roles: list[str]
+    token: TokenInfo
