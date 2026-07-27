@@ -9,8 +9,8 @@ authentication:
   # /Auth/refresh
 
 endpoints:
-  recepcion: "/recepciones"
-  despacho: "/despachos"
+  recepciones: "/recepciones"
+  despachos: "/despachos"
 
 datasets:
   usuarios: "datasets/usuarios.csv"
