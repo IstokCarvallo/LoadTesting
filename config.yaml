@@ -1,0 +1,21 @@
+api:
+  host: "https://rioblanco-api-movimientos-dfg2hcf2bdfhh4aq.eastus-01.azurewebsites.net/api"
+
+authentication:
+   login: "/Auth/login"
+   refresh: "/Auth/refresh"
+   refresh_margin_seconds: 60
+
+  # /Auth/refresh
+
+endpoints:
+  recepcion: "/recepciones"
+  despacho: "/despachos"
+
+datasets:
+  usuarios: "datasets/usuarios.csv"
+  consultas: "datasets/clientes_fechas.csv"
+
+logging:
+  level: "INFO"
+  folder: "logs"

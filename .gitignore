@@ -1,0 +1,30 @@
+# Byte-compiled
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Visual Studio Code
+.vscode/
+
+# Logs
+logs/
+*.log
+
+# Reports
+reports/
+*.html
+*.csv
+
+# Python cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Operating System
+.DS_Store
+Thumbs.db
