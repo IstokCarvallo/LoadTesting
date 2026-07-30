@@ -11,12 +11,7 @@ from .base_client import BaseClient
 class AuthClient(BaseClient):
     """Cliente para autenticación contra la API."""
 
-    def login(
-        self,
-        username: str,
-        password: str,
-    ) -> LoginResponse:
-
+    def login(self, username: str, password: str,) -> LoginResponse:
         response: ApiResponse = self.post(
             config.authentication.login,
             {
@@ -46,10 +41,7 @@ class AuthClient(BaseClient):
             ),
         )
 
-    def refresh(
-        self,
-        refresh_token: str,
-    ) -> TokenInfo:
+    def refresh(self, refresh_token: str,) -> TokenInfo:
 
         response: ApiResponse = self.post(
             config.authentication.refresh,
