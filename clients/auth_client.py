@@ -4,14 +4,14 @@ Cliente de autenticación.
 
 from datetime import datetime
 from config import config
-from models import ApiResponse, LoginResponse, TokenInfo
+from models import ApiResponse, AuthResult, RefreshResult, LoginResponse, TokenInfo
 from .base_client import BaseClient
 
 
 class AuthClient(BaseClient):
     """Cliente para autenticación contra la API."""
 
-    def login(self, username: str, password: str,) -> LoginResponse:
+    def login(self, username: str, password: str,) -> AuthResult:
         response: ApiResponse = self.post(
             config.authentication.login,
             {
@@ -28,7 +28,7 @@ class AuthClient(BaseClient):
 
         data = response.body["data"]
 
-        return LoginResponse(
+        login = LoginResponse(
             user_id=data["userId"],
             username=data["username"],
             roles=data["roles"],
@@ -41,7 +41,13 @@ class AuthClient(BaseClient):
             ),
         )
 
-    def refresh(self, refresh_token: str,) -> TokenInfo:
+        return AuthResult(
+                login=login,
+                elapsed_ms=response.elapsed_ms,
+                status_code=response.status_code,
+            )
+
+    def refresh(self, refresh_token: str,) -> RefreshResult:
 
         response: ApiResponse = self.post(
             config.authentication.refresh,
@@ -58,10 +64,16 @@ class AuthClient(BaseClient):
 
         data = response.body["data"]
 
-        return TokenInfo(
+        token = TokenInfo(
             access_token=data["accessToken"],
             refresh_token=data["refreshToken"],
             expiration=datetime.fromisoformat(
                 data["accessTokenExpiration"].replace("Z", "+00:00")
             ),
+        )
+
+        return RefreshResult(
+            token=token,
+            elapsed_ms=response.elapsed_ms,
+            status_code=response.status_code,
         )

@@ -12,6 +12,11 @@ from models import ApiResponse
 
 
 class LoadRunner:
+    @property
+    def auth(self) -> AuthManager:
+        return self._auth
+
+    
     def __init__(self) -> None:
         self._datasets = DatasetProvider()
         self._auth = AuthManager()
@@ -19,6 +24,7 @@ class LoadRunner:
         self._despachos = DespachosClient()
 
         self._authenticated = False
+
 
     def _authenticate(self) -> None:
         if self._authenticated:
@@ -33,6 +39,7 @@ class LoadRunner:
 
         self._authenticated = True
 
+
     def ejecutar_recepcion(self) -> ApiResponse:
         self._authenticate()
         consulta = self._datasets.next_consulta()
@@ -41,6 +48,7 @@ class LoadRunner:
             access_token=self._auth.get_access_token(),
             consulta=consulta,
         )
+
 
     def ejecutar_despacho(self) -> ApiResponse:
         self._authenticate()

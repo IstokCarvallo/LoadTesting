@@ -62,6 +62,7 @@ class LoginResponse:
     roles: list[str]
     token: TokenInfo
 
+
 @dataclass(frozen=True)
 class ConsultaRequest:
     """Solicitud de consulta de movimientos."""
@@ -69,11 +70,13 @@ class ConsultaRequest:
     cliente_id: int
     fecha_proceso: str
 
+
 @dataclass(frozen=True)
 class Usuario:
     """Solicitud de usuarios para API."""
     username: str
     password: str
+
 
 @dataclass(frozen=True)
 class ApiResponse:
@@ -84,3 +87,21 @@ class ApiResponse:
     elapsed_ms: float
     body: dict[str, Any] = field(default_factory=dict)
     error: str | None = None
+
+
+@dataclass(frozen=True)
+class AuthResult:
+    """Resultado de una autenticación."""
+
+    login: LoginResponse
+    elapsed_ms: float
+    status_code: int
+
+
+@dataclass(frozen=True)
+class RefreshResult:
+    """Resultado de una renovación de token."""
+
+    token: TokenInfo
+    elapsed_ms: float
+    status_code: int
